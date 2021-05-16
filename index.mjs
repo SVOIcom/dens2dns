@@ -2,11 +2,10 @@ import DeNsResolver from "./DeNsResolver.mjs";
 
 const TTL = 1;
 const MAIN_DNS_SERVERS = ['8.8.8.8'];
+const BINDING_HOST = '127.0.0.1';
+const BINDING_PORT = 53;
 
 import named from 'named';
-//import lookup from "./lookupAsync.mjs";
-
-//import {promisify} from 'util';
 import dns from 'dns';
 
 const {Resolver} = dns.promises;
@@ -16,19 +15,14 @@ resolver.setServers(MAIN_DNS_SERVERS);
 
 const server = named.createServer();
 
-server.listen(53, '127.0.0.1', function () {
-    console.log('DNS server started on port 9999');
+server.listen(BINDING_PORT, BINDING_HOST, function () {
+    console.log('DNS server started on', `${BINDING_HOST}:${BINDING_PORT}`);
 });
 
 server.on('query', async function (query) {
     let domain = query.name();
     const type = query.type();
     console.log('DNS Query: %s', domain)
-    /*let target = new named.SOARecord('127.0.0.2', {serial: 123456});
-    console.log(target);
-    query.addAnswer(domain, target, TTL);
-    server.send(query);*/
-
 
     let record = null;
     let nsResponse = null;
@@ -104,6 +98,7 @@ server.on('query', async function (query) {
         // console.log(record);
         server.send(query);
     } catch (e) {
+        console.log('Query for', domain, 'rejected');
         server.send(query);
     }
 });
