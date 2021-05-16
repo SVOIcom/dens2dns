@@ -3,7 +3,7 @@ import DeNsResolver from "./DeNsResolver.mjs";
 const TTL = 1;
 const MAIN_DNS_SERVERS = ['8.8.8.8'];
 const BINDING_HOST = '0.0.0.0';
-const BINDING_PORT = 53;
+const BINDING_PORT = 5353;
 
 import named from 'named';
 import dns from 'dns';
@@ -32,7 +32,7 @@ server.on('query', async function (query) {
         if(domain.toLowerCase().includes('.freeton')) {
             try {
 
-                let freetonDomain = domain.toLowerCase().replace('.freeton', '');
+                let freetonDomain = domain.toLowerCase().replace('.freeton', '').replace(/\./gm,'/');
                 const freetonResolver = new DeNsResolver();
                 let response = await freetonResolver.resolveNSData(freetonDomain);
                 //console.log('FREETON RESPONSE', response);
