@@ -2,7 +2,7 @@ import DeNsResolver from "./DeNsResolver.mjs";
 
 const TTL = 1;
 const MAIN_DNS_SERVERS = ['8.8.8.8'];
-const BINDING_HOST = '127.0.0.1';
+const BINDING_HOST = '0.0.0.0';
 const BINDING_PORT = 53;
 
 import named from 'named';
@@ -27,6 +27,7 @@ server.on('query', async function (query) {
     let record = null;
     let nsResponse = null;
     try {
+
         //It's FreeTON domain
         if(domain.toLowerCase().includes('.freeton')) {
             try {
